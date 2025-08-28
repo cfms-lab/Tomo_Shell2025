@@ -2,6 +2,8 @@
 Filament Usage Prediction in 3D Printing  of Thin-Shell-Structured Manikin Mesh
 한국섬유공학회지 2025-08 submitted
 
+![pics/tomo_sh1.png]
+
 #### 1. Python (버전 3.10 이상)에서 다음 패키지들을 설치합니다
 (패키지 설치가 안되면 버전 번호를 빼고 그냥 설치해도 됩니다).
 ```
@@ -22,6 +24,8 @@ scipy==1.13.1
 # 뼈대 구조와 군집 분석을 이용한 인체 마네킨의 최적 3D프린팅
 Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 한국섬유공학회지 2025-08 submitted
+
+![pics/tomo_sh2.png]
 
 #### 1. 위의 1번과 마찬가지로 패키지를 설치합니다.
 
