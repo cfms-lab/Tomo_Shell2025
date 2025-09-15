@@ -112,13 +112,9 @@ import datetime
 def StartTimer():
 	return time.time()
 
-import colorama
-from colorama import Fore
-from colorama import Style
-
 def EndTimer( start_time, filename):
 	end_time = time.time();    total_time = end_time - start_time
-	print(Fore.GREEN + filename + '= ', datetime.timedelta(seconds=total_time), ' seconds \n' + Style.RESET_ALL)
+	print(filename + '= ', datetime.timedelta(seconds=total_time), ' seconds \n')
 
 #--------------------------------------------------------------
 #com. geom.
@@ -441,13 +437,13 @@ def findOptimals(YPR, data, nOptimal):#data is 1D array
 
 		(yaw,pitch, roll) = (YPR[opt_ID,0], YPR[opt_ID,1], YPR[opt_ID,2])
 		optimal_YPRs[i]    =  np.array([yaw, pitch, roll, optMtotal] )
-		print( Fore.GREEN, i+1,"st optimal is at [", FStr( toDegree([yaw,pitch,roll])),
-						"], Mss=", FStr( optMtotal, precision=3), Style.RESET_ALL)
+		print( i+1,"st optimal is at [", FStr( toDegree([yaw,pitch,roll])),
+						"], Mss=", FStr( optMtotal, precision=3))
 
 		(yaw,pitch, roll) = (YPR[wst_ID,0], YPR[wst_ID,1], YPR[wst_ID,2])
 		worst_YPRs[i]    =  np.array([yaw, pitch, roll, wstMtotal] )
-		print( Fore.MAGENTA, i+1,"st worst is at [", FStr( toDegree([yaw,pitch,roll])),
-						"], Mss=", FStr( wstMtotal, precision=3), Style.RESET_ALL)
+		print( i+1,"st worst is at [", FStr( toDegree([yaw,pitch,roll])),
+						"], Mss=", FStr( wstMtotal, precision=3))
 	return (optimal_YPRs, worst_YPRs)
 
 # import quaternion
@@ -522,10 +518,10 @@ def LoadInputMesh(filename):
 	import os.path
 	import sys
 	if( not os.path.isfile(filename) ):
-		print(Fore.RED + '[ERROR] File Does not Exists: ' + filename +  Style.RESET_ALL)
+		print('[ERROR] File Does not Exists: ' + filename)
 		sys.exit(0)
 	if( not os.path.isfile(g_CppDLLFileName) ):
-		print(Fore.RED + '[ERROR] C++ Dll Does not Exists: ' + g_CppDLLFileName +  Style.RESET_ALL)
+		print('[ERROR] C++ Dll Does not Exists: ' + g_CppDLLFileName)
 		sys.exit(0)
 	mesh0 = o3d.geometry.TriangleMesh()
 	mesh0 = o3d.io.read_triangle_mesh(filename)

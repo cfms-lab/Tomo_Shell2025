@@ -1,22 +1,32 @@
+#### (공통) Python (버전 3.9.23) 에서 다음 패키지들을 설치합니다
+(패키지 설치가 안되면 버전 번호를 빼고 그냥 설치해도 됩니다).
+```
+matplotlib==3.10.6
+meshlib==3.0.7.226
+networkx==2.5.1
+numba==0.60.0
+numpy==2.3.3
+open3d==0.19.0
+plotly==6.3.0
+polyscope==2.5.0
+potpourri3d==1.3
+pyglm==2.8.2
+pygltflib==1.16.5
+recordtype==1.3
+scikit_learn==1.7.2
+scikit_learn_extra==0.2.0
+scipy==1.16.2
+trimesh==4.7.4
+typed==0.6
+```
+
 # 얇은 쉘 구조 마네킨 메쉬의 3D프린팅 필라멘트 소모량 예측
 Filament Usage Prediction in 3D Printing  of Thin-Shell-Structured Manikin Mesh
 한국섬유공학회지 2025-08 submitted
 
 ![sh1](pics/tomo_sh1.png)
 
-#### 1. Python (버전 3.10 이상)에서 다음 패키지들을 설치합니다
-(패키지 설치가 안되면 버전 번호를 빼고 그냥 설치해도 됩니다).
-```
-colorama==0.4.6
-matplotlib==3.9.0
-numpy==1.26.4
-open3d==0.18.0
-packaging==24.0
-pandas==2.2.2
-plotly==5.22.0
-scipy==1.13.1
-```
-#### 2. "/shell_test/TomoSh_Test.py" 파일을 실행합니다.
+#### "TSE_TomoSh1.py" 파일을 실행합니다.
 
 ##### GPU 버전은 현재 NVIDIA 4060, 4090에서만 테스트하였습니다. 5000번 시리즈는 아직 오류가 있어 실행이 안될 수 있습니다.
 
@@ -27,21 +37,11 @@ Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 
 ![sh2](pics/tomo_sh2.png)
 
-#### 1. 아래 패키지를 설치합니다
-(conda라고 적힌 것들은 anaconda 환경일 때 예제입니다. pip install로 설치해도 됩니다).
+#### "TSE_TomoSh2.py" 파일을 실행합니다.
+-------------
+# 뼈대 구조와 통계 기법을 이용한 인체 자동 계측
+한국섬유공학회지 2025-09 to be submitted
 
 ```
-python==3.9.23
-conda install -c conda-forge polyscope
-conda install conda-forge::scikit-learn==1.6.1
-conda install conda-forge::trimesh==4.7.1
-conda install conda-forge::pyglm==2.8.2
-conda install conda-forge::numba==0.60.0
-conda install conda-forge::pygltflib==1.16.5
-conda install conda-forge::scikit-learn-extra==0.2.0
-conda install conda-forge::networkx==3.2.1
-conda install conda-forge::opencv==4.8.1
-pip install meshlib==3.0.6.229
-```
+#### "TSE_TomoSh3.py" 파일을 실행합니다.
 
-#### 2. "main.py" 파일을 실행합니다.

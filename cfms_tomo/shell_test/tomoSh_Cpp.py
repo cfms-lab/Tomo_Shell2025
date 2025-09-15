@@ -1,5 +1,5 @@
 # %%
-from  tomoSh_io import *
+from  cfms_tomo.shell_test.tomoSh_io import *
 
 class tomoSh_Cpp:
   FileName = ""; mesh0 = [];vtx = []; tri=[]; vtx_nrm=[]; xx=[]; yy=[];zz=[];
@@ -93,9 +93,9 @@ class tomoSh_Cpp:
     self.vm_info = np.array(Cptr1d_to_np(self.CppDLL.getVolMassInfo(),  21)).astype(np.float32)
 
     if(self.bVerbose):
-      print( Fore.BLUE, 'Mo3D=    ', Style.RESET_ALL, FStr(self.Mo3D.reshape(     self.nYPR_Intervals,self.nYPR_Intervals) , precision=2))
-      print( Fore.BLUE, 'Mss3D=   ', Style.RESET_ALL, FStr(self.Mss3D.reshape(    self.nYPR_Intervals,self.nYPR_Intervals) , precision=2))
-      print( Fore.BLUE, 'Mtotal3D=', Style.RESET_ALL, FStr(self.Mtotal3D.reshape( self.nYPR_Intervals,self.nYPR_Intervals) , precision=2))
+      print( 'Mo3D=    ', FStr(self.Mo3D.reshape(     self.nYPR_Intervals,self.nYPR_Intervals) , precision=2))
+      print( 'Mss3D=   ', FStr(self.Mss3D.reshape(    self.nYPR_Intervals,self.nYPR_Intervals) , precision=2))
+      print( 'Mtotal3D=', FStr(self.Mtotal3D.reshape( self.nYPR_Intervals,self.nYPR_Intervals) , precision=2))
       # np.savetxt('Mo.txt',  Mo3D.reshape( self.nYPR_Intervals,self.nYPR_Intervals), delimiter='\t')
       # np.savetxt('Mss.txt', self.Mss3D.reshape(self.nYPR_Intervals,self.nYPR_Intervals), delimiter='\t')
 

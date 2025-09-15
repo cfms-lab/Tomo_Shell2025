@@ -1,5 +1,5 @@
 # TomoNV example, C++ Dll version
-from  tomoSh_Cpp import *
+from  cfms_tomo.shell_test.tomoSh_Cpp import *
 import os
 
 #-----------------------------------------------
@@ -8,16 +8,16 @@ import os
 #========================================================================================================================
 
 
-#DataSet= [ ('cfms_tomo\\shell_meshes\\(1)sphere.ply', 0, 0., 0)]
-#DataSet= [ ('cfms_tomo\\shell_meshes\\(2)hemisphere.ply', 0, 0., 0)]
-DataSet= [ ('cfms_tomo\\shell_meshes\\(3)manikin.ply', 0, 0., 0)]
-#DataSet= [ ('cfms_tomo\\shell_meshes\\(4)bodice0.ply', 0, 0, 0)]
-#DataSet= [ ('cfms_tomo\\shell_meshes\\(5)bodice0.1.ply', 0, 0., 0)]
-#DataSet= [ ('cfms_tomo\\shell_meshes\\(6)bodice1.ply', 0, 0., 0)]
-#DataSet= [ ('cfms_tomo\\shell_meshes\\(7)bodice5.ply', 0, 0, 0)]#bodice worst
+#DataSet= [ ('MeshData/(1)sphere.ply', 0, 0., 0)]
+#DataSet= [ ('MeshData/(2)hemisphere.ply', 0, 0., 0)]
+DataSet= [ ('MeshData/(3)manikin.ply', 0, 0., 0)]
+#DataSet= [ ('MeshData/(4)bodice0.ply', 0, 0, 0)]
+#DataSet= [ ('MeshData/(5)bodice0.1.ply', 0, 0., 0)]
+#DataSet= [ ('MeshData/(6)bodice1.ply', 0, 0., 0)]
+#DataSet= [ ('MeshData/(7)bodice5.ply', 0, 0, 0)]#bodice worst
 
 theta_YP = 0 #type 1). seeing a specific orientation.
-theta_YP = 1 #type #2). search among multiple orientations and find the optimal one, with search step 360/N (N=integer)
+theta_YP = 5 #type #2). search among multiple orientations and find the optimal one, with search step 360/N (N=integer)
 #========================================================================================================================
 
 for Data in DataSet:
@@ -55,9 +55,8 @@ for Data in DataSet:
 		tomoSh_Cpp1.bShellMesh = not tomoSh_Cpp1.mesh0.is_watertight()
 		tomoSh_Cpp1.bShellMesh = False #set to 'False' in case 'an illegal memory access' occurs in 'TomoSh_CUDA' version.
 
-		#tomoSh_Cpp1.Run(cpp_function_name = 'TomoSh_TMPxl') #call CPU/original version. Bed is not generated
-		#tomoSh_Cpp1.Run(cpp_function_name = 'TomoSh_INT3') #call CPU/vectorized version
-		tomoSh_Cpp1.Run(cpp_function_name = 'TomoSh_CUDA') #call GPU version. Need NVIDIA graphic card (GTX760 or above)
+		tomoSh_Cpp1.Run(cpp_function_name = 'TomoSh_INT3') #call CPU/vectorized version
+		#tomoSh_Cpp1.Run(cpp_function_name = 'TomoSh_CUDA') #call GPU version. Need NVIDIA graphic card (GTX760 or above)
 
 		#-----------------------------------------------
 		# (3) Rendering
