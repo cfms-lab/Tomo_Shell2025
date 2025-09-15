@@ -42,7 +42,6 @@ Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 # 뼈대 구조와 통계 기법을 이용한 인체 자동 계측
 한국섬유공학회지 2025-09 to be submitted
 
-```
 
 ![sh3](pics/tomo_sh3.png)
 
