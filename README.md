@@ -43,5 +43,8 @@ Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 한국섬유공학회지 2025-09 to be submitted
 
 ```
+
+![sh3](pics/tomo_sh3.png)
+
 #### "TSE_TomoSh3.py" 파일을 실행합니다.
 

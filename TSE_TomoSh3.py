@@ -9,8 +9,8 @@ avatar = gltfLoader( # (1) GLTF 파일 열기. max_height는 mm단위. SizeKorea
 		renderer = polyscope,
 		#filename = 'MeshData/masha1_jumpingDown_rest.gltf',	max_height = 1759.94
 		#filename = 'MeshData/SK6th_F20_4k_NoFinger.gltf',		max_height = 1650.01,
-		#filename = 'MeshData/SK6th_F20_10k_NoFinger.gltf',	max_height = 1650.01,
-		filename = 'MeshData/SK6th_M20_4k_NoFinger.gltf',		max_height = 1759.94,
+		filename = 'MeshData/SK6th_F20_10k_NoFinger.gltf',	max_height = 1650.01,
+		#filename = 'MeshData/SK6th_M20_4k_NoFinger.gltf',		max_height = 1759.94,
 		#filename = 'MeshData/SK6th_M20_87k_NoFinger.gltf',	max_height = 1759.94
 		)
 
