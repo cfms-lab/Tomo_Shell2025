@@ -27,6 +27,21 @@ Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 
 ![sh2](pics/tomo_sh2.png)
 
-#### 1. 위의 1번과 마찬가지로 패키지를 설치합니다.
+#### 1. 아래 패키지를 설치합니다
+(conda라고 적힌 것들은 anaconda 환경일 때 예제입니다. pip install로 설치해도 됩니다).
+
+```
+python==3.9.23
+conda install -c conda-forge polyscope
+conda install conda-forge::scikit-learn==1.6.1
+conda install conda-forge::trimesh==4.7.1
+conda install conda-forge::pyglm==2.8.2
+conda install conda-forge::numba==0.60.0
+conda install conda-forge::pygltflib==1.16.5
+conda install conda-forge::scikit-learn-extra==0.2.0
+conda install conda-forge::networkx==3.2.1
+conda install conda-forge::opencv==4.8.1
+pip install meshlib==3.0.6.229
+```
 
 #### 2. "main.py" 파일을 실행합니다.
