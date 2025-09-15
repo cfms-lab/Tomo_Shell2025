@@ -1,7 +1,7 @@
 import numpy as np
 import polyscope #3D renderer by Nicholas Sharp. https://polyscope.run/py/
 
-from batchWorks import Batch
+from cfms_meshcut.cut_batchWorks import Batch
 from cfms_meshcut.cut_function import cutType, CutOption
 from cfms_tomo.tomo_slicingOptions import SlicingOptions
 from highfestiva_gltfLoader import gltfLoader #modified from https://github.com/highfestiva/gltf-skin-anim-viewer
@@ -59,10 +59,10 @@ batch = Batch(
 	#cut_options = [km2, km2, km10, km20],
 	#cut_options = [ag2, ag5, ag10, ag20],
 	#cut_options = [kd2, kd5, kd10, kd20],
-	cut_options = [db5, km2, ag20, kd20],
+	#cut_options = [db5, km2, ag20, kd20],
 	#cut_options = [bn1, bn2, bn3],
 	#cut_options = [nc, kd20, bn1, bn2, bn3, bn4],
-	#cut_options = [bn4],
+	cut_options = [bn4],
 	slicing_option = s_o
 	)
 

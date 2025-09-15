@@ -1,20 +1,21 @@
-from enum import Enum
+from enum import Enum, auto
 from collections import namedtuple
 
 
 class cutType(Enum):
-    no_cut = 0
+    no_cut 		= auto()
 
-    kmeans = 1
-    scipy_kmeans2 = 2
-    aggler = 3
-    DBSCAN = 4
-    KMedoids = 5
+    kmeans 		= auto()
+    kmeans2 	= auto()
+    aggler 		= auto()
+    DBSCAN	 	= auto()
+    KMedoids 	= auto()
+    spectral	= auto()
 
-    bone_pairdist = 10
-    bone_kmeans = 11
-    bone_KMedoids = 12
-    bone_p2bdist = 13
+    bone_kmeans 	= auto()
+    bone_KMedoids = auto()
+    bone_pairdist = auto()
+    bone_p2bdist 	= auto()
 
 CutOption  = namedtuple('CutOption', 'name type number')
 
@@ -29,7 +30,7 @@ def cutFunction(cut_option : CutOption, V, Fc, Vn, Fn, bonetip1, bonetip2):
 		(centroids, groups) = k_means( Fc, No)#trimesh.points.k_means
 		bPerVertex = True
 
-	elif Tp == cutType.scipy_kmeans2.value:#방법2
+	elif Tp == cutType.kmeans2.value:#방법2
 		from scipy.cluster.vq import kmeans2
 		(centroids, groups) = kmeans2(V, No) #scipy.cluster.vq.kmeans
 		bPerVertex = False
@@ -67,7 +68,6 @@ def cutFunction(cut_option : CutOption, V, Fc, Vn, Fn, bonetip1, bonetip2):
 
 	elif Tp == cutType.bone_pairdist.value:#k-Medoids, fixed centroid. 제일 잘 되지만 오른 팔목 그룹 오류.
 		#https.value://www.google.com/search?q=python+K-Medoids+for+fixed+centroids&sca_esv=440a43a3eb6979b0&sxsrf=AE3TifOSEHY3wAGCU-YTO-evFzh9k5m_7g%3A1752401570371&ei=ooZzaI61FtDP2roPu7X2yQ0&ved=0ahUKEwiOjuzIzLmOAxXQp1YBHbuaPdkQ4dUDCBA&uact=5&oq=python+K-Medoids+for+fixed+centroids&gs_lp=Egxnd3Mtd2l6LXNlcnAiJHB5dGhvbiBLLU1lZG9pZHMgZm9yIGZpeGVkIGNlbnRyb2lkczIFECEYoAEyBRAhGKABSJ0xUPILWLcvcAF4AJABAZgBlAOgAcImqgEIMi0yMC4wLjG4AQPIAQD4AQGYAhSgAvshwgIKEAAYsAMY1gQYR8ICBRAAGO8FwgIIEAAYogQYiQXCAgYQABgIGB7CAgcQIRigARgKwgIEECEYFZgDAIgGAZAGCpIHBjEuMC4xOaAHgUCyBwQyLTE5uAf2IcIHBDE1LjXIBxI&sclient=gws-wiz-serp
-		from sklearn_extra.cluster import KMedoids
 		from sklearn.metrics.pairwise import pairwise_distances
 		import numpy as np
 		distances = pairwise_distances(V, bonetip1)
@@ -76,7 +76,6 @@ def cutFunction(cut_option : CutOption, V, Fc, Vn, Fn, bonetip1, bonetip2):
 	elif Tp == cutType.bone_p2bdist.value:#K-medoids, bone과의 거리 기준.  관절을 따라기간 하지만 일부 그룹이 분리되어 있다.
 		#https.value://www.google.com/search?q=scklearn+K-Medoids+user+defined+metric&sca_esv=e770264821b4b2f0&sxsrf=AE3TifOE53hwOVgrtzoV9ShG1IgsR_-Drg%3A1752407766763&ei=1p5zaOmVLsKq0-kP6PaZ-AM&ved=0ahUKEwjp2MHT47mOAxVC1TQHHWh7Bj8Q4dUDCBA&uact=5&oq=scklearn+K-Medoids+user+defined+metric&gs_lp=Egxnd3Mtd2l6LXNlcnAiJnNja2xlYXJuIEstTWVkb2lkcyB1c2VyIGRlZmluZWQgbWV0cmljMgUQABjvBTIIEAAYgAQYogQyCBAAGIAEGKIEMgUQABjvBTIIEAAYgAQYogRIpB9QogdY8RZwAXgBkAEAmAHuAqABoROqAQUyLTkuMbgBA8gBAPgBAZgCBaACswfCAgoQABiwAxjWBBhHwgIKECEYoAEYwwQYCpgDAOIDBRIBMSBAiAYBkAYKkgcFMS4wLjSgB6grsgcDMi00uAevB8IHBTEuMy4xyAcH&sclient=gws-wiz-serp
 		import numpy as np
-		from sklearn_extra.cluster import KMedoids
 		from sklearn.metrics.pairwise import pairwise_distances
 		from cfms_meshcut.cut_math import point_to_bone_dist
 		point6f 	= np.concatenate((V, Vn), axis=1)

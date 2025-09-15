@@ -31,7 +31,7 @@ class CutManager:
 		elif group_ids[1] == group_ids[2]:	return group_ids[1]
 		else:								return group_ids[2]
 
-	def cut_mesh(self, cut_method):
+	def cut_mesh(self, cut_method, bBodyMeaure=False):
 		self.name =  f"{cut_method.name}_cut"
 
 		self.cuts = []
@@ -43,7 +43,13 @@ class CutManager:
 		F  = np.array( T.faces, copy = True)
 		FC = np.array( T.triangles_center, copy = True)
 		Fn = np.array( T.face_normals, copy = True)
-		B1, B2= HF.get_bone_pos() # parent/child xyz coordinates
+
+		B1 = None
+		B2 = None
+		if( bBodyMeaure):
+			B1, B2= HF.get_end_bone_pos()
+		else:
+			B1, B2= HF.get_bone_pos()
 
 		#prepare polyscope graph
 		new_ps_id = ps.create_group( f"{self.name}_G")

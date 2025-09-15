@@ -33,9 +33,10 @@ def point_to_bone_dist( point6f, bone6f):
 	criteria = uv_dot
 	if np.abs(u_norm) > 1e-5:  criteria = uv_dot / (u_norm * u_norm)
 
-	#signed_dist1 = pt_to_plane_dist( p1, q, qn) 오히려 잘 안됨
-	#signed_dist2 = pt_to_plane_dist( p2, q, qn)
-	#if all([signed_dist1 > 0.001,signed_dist2 > 0.001]): return 1e5
+	signed_dist1 = pt_to_plane_dist( p1, q, qn)
+	signed_dist2 = pt_to_plane_dist( p2, q, qn)
+	if all([signed_dist1 > 1e-3,signed_dist2 > 1e-3]):
+		return max(signed_dist1, signed_dist2)*1e3
 
 	if criteria > 1.:
 		return np.linalg.norm( np.subtract( p2, q))

@@ -31,20 +31,21 @@ class hfMesh:
 						color 		= np.ones(3)
 					)
 		if hasattr(self, 'tex_data'):
-			if len(self.tex_data)>0:
-				uv_name = f"{self.name}_uv"
-				ps_mesh.add_parameterization_quantity(
-							name 		= uv_name,
-							values		= M.uvs
-						)
-				ps_mesh.add_color_quantity(
-							f"{self.name}_tex",
-							self.tex_data,
-							defined_on	= 'texture',
-							param_name	= uv_name,
-							image_origin='lower_left',
-							enabled		= True
-						)
+			if self.tex_data is not None:
+				if len(self.tex_data)>0:
+					uv_name = f"{self.name}_uv"
+					ps_mesh.add_parameterization_quantity(
+								name 		= uv_name,
+								values		= M.uvs
+							)
+					ps_mesh.add_color_quantity(
+								f"{self.name}_tex",
+								self.tex_data,
+								defined_on	= 'texture',
+								param_name	= uv_name,
+								image_origin='lower_left',
+								enabled		= True
+							)
 		return ps_mesh
 
 	def get_bounds(self):
