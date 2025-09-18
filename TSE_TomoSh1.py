@@ -10,10 +10,10 @@ import os
 
 #DataSet= [ ('MeshData/(1)sphere.ply', 0, 0., 0)]
 #DataSet= [ ('MeshData/(2)hemisphere.ply', 0, 0., 0)]
-DataSet= [ ('MeshData/(3)manikin.ply', 0, 0., 0)]
+#DataSet= [ ('MeshData/(3)manikin.ply', 0, 0., 0)]
 #DataSet= [ ('MeshData/(4)bodice0.ply', 0, 0, 0)]
 #DataSet= [ ('MeshData/(5)bodice0.1.ply', 0, 0., 0)]
-#DataSet= [ ('MeshData/(6)bodice1.ply', 0, 0., 0)]
+DataSet= [ ('MeshData/(6)bodice1.ply', 0, 0., 0)]
 #DataSet= [ ('MeshData/(7)bodice5.ply', 0, 0, 0)]#bodice worst
 
 theta_YP = 0 #type 1). seeing a specific orientation.
