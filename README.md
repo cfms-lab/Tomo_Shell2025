@@ -39,8 +39,10 @@ Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 
 #### "TSE_TomoSh2.py" 파일을 실행합니다.
 -------------
-# 뼈대 구조와 통계 기법을 이용한 인체 자동 계측
-한국섬유공학회지 2025-09 to be submitted
+# 뼈대 구조와 군집 분석을 이용한 사용자 정의 인체 자동 계측
+User-Defined Three-Dimensional Human Body Measurement Using Bone Structure and Cluster Analysis
+
+한국섬유공학회지 2025-09 submitted
 
 
 ![sh3](pics/tomo_sh3.png)

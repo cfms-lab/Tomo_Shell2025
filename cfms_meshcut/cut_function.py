@@ -1,5 +1,7 @@
 from enum import Enum, auto
 from collections import namedtuple
+import time
+import datetime
 
 
 class cutType(Enum):
@@ -52,22 +54,41 @@ def cutFunction(cut_option : CutOption, V, Fc, Vn, Fn, bonetip1, bonetip2):
 		km = KMedoids(n_clusters=No,metric="manhattan", random_state=0, max_iter = 300).fit(V)
 		groups, centroids = km.labels_, km.cluster_centers_
 
+	elif Tp == cutType.spectral.value:
+		from sklearn.cluster import SpectralClustering
+		result = SpectralClustering(
+    		n_clusters=6,
+				n_components = 6,
+      	assign_labels='discretize',
+				eigen_solver = 'amg',
+				eigen_tol = 'auto',
+				affinity = 'nearest_neighbors',
+        random_state=0).fit(V)
+		groups = result.labels_
+
 	#---------bone-based
-	#bone-based methods
 	elif Tp == cutType.bone_kmeans.value:
 		from sklearn.cluster import KMeans
 		result = KMeans(n_clusters= len(bonetip1), init=bonetip1, n_init=1)
 		result.fit(V)
 		(groups, centroids) = (result.labels_, result.cluster_centers_)
 
-	elif Tp == cutType.bone_KMedoids.value:#왜 안됌?
+	elif Tp == cutType.bone_KMedoids.value:
 		from sklearn_extra.cluster import KMedoids
 		import numpy as np
-		km = KMedoids(n_clusters=len(bonetip1),metric="manhattan", random_state=0, max_iter = 300).fit(V)
+		km = KMedoids(
+    	n_clusters=6,
+     	metric="manhattan",
+      method = 'pam',
+      random_state=0,
+      max_iter = 100
+      ).fit(V)
 		groups, centroids = km.labels_, km.cluster_centers_
+
 
 	elif Tp == cutType.bone_pairdist.value:#k-Medoids, fixed centroid. 제일 잘 되지만 오른 팔목 그룹 오류.
 		#https.value://www.google.com/search?q=python+K-Medoids+for+fixed+centroids&sca_esv=440a43a3eb6979b0&sxsrf=AE3TifOSEHY3wAGCU-YTO-evFzh9k5m_7g%3A1752401570371&ei=ooZzaI61FtDP2roPu7X2yQ0&ved=0ahUKEwiOjuzIzLmOAxXQp1YBHbuaPdkQ4dUDCBA&uact=5&oq=python+K-Medoids+for+fixed+centroids&gs_lp=Egxnd3Mtd2l6LXNlcnAiJHB5dGhvbiBLLU1lZG9pZHMgZm9yIGZpeGVkIGNlbnRyb2lkczIFECEYoAEyBRAhGKABSJ0xUPILWLcvcAF4AJABAZgBlAOgAcImqgEIMi0yMC4wLjG4AQPIAQD4AQGYAhSgAvshwgIKEAAYsAMY1gQYR8ICBRAAGO8FwgIIEAAYogQYiQXCAgYQABgIGB7CAgcQIRigARgKwgIEECEYFZgDAIgGAZAGCpIHBjEuMC4xOaAHgUCyBwQyLTE5uAf2IcIHBDE1LjXIBxI&sclient=gws-wiz-serp
+		from sklearn_extra.cluster import KMedoids
 		from sklearn.metrics.pairwise import pairwise_distances
 		import numpy as np
 		distances = pairwise_distances(V, bonetip1)
@@ -85,3 +106,11 @@ def cutFunction(cut_option : CutOption, V, Fc, Vn, Fn, bonetip1, bonetip2):
 
 	return (groups, bPerVertex)
 
+def StartTimer(str=""):
+  if len(str)>0:
+    print(str)
+  return time.time()
+
+def EndTimer( start_time, filename):
+	end_time = time.time();    total_time = end_time - start_time
+	print(filename + '= ', datetime.timedelta(seconds=total_time), ' seconds \n')

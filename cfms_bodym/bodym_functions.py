@@ -1,47 +1,52 @@
 import numpy as np
 from collections import defaultdict
 from recordtype import recordtype
-from enum import Enum
+from enum import Enum, auto
 
 import trimesh
 
 GirthSlice 	= recordtype('BodySize', 		'name slice')
 FeaturePos 	= recordtype('FeaturePos',	'name pos')
-SizeLine		= recordtype('SizeLine',	 	'name points')
+SizeLine		= recordtype('SizeLine',	 	'name points length')
 CutLine			= recordtype('CutLine',			'name slice')
 
 class BodyPart(Enum):
 	Head		 = 0
-	Bodice 	 = 1
-	LeftArm	 = 2
-	RightArm = 3
-	LeftLeg	 = 4
-	RightLeg = 5
-	NotKnown = 6
+	Bodice 	 = auto()
+	LeftArm	 = auto()
+	RightArm = auto()
+	LeftLeg	 = auto()
+	RightLeg = auto()
+	Torso		 = auto()
+	NotKnown = auto()
+	WholeBody = auto()#for debug.
+	Legs			= auto()# 허벅지용
 
 class LandMark(Enum):
   Name	 = 0
-  Part	 = 1
-  Up 	 	 = 2
-  From 	 = 3
-  To   	 = 4
-  param	 = 5
+  Part	 = auto()
+  Up 	 	 = auto()
+  From 	 = auto()
+  To   	 = auto()
+  param	 = auto()
 
 class BPVector(Enum):
   #몸 전체 방향 벡터
-	Up 				= 0
-	Front 		= 1
-	Back			= 2
-	Right 		= 3
-	Left   		= 4
+	BoneDir		= 0 # 가중치가 0~1 사이인 경우, 뼈대 방향을 방향벡터로 사용.
 
-	#로컬 벡터
-	Head		 	= 5
-	Bodice 	 	= 6
-	LeftArm 	= 7
-	RightArm 	= 8
-	LeftLeg 	= 9
-	RightLeg 	= 10
+	Up 				= auto()# 몸 전체의 글로벌 방향 벡터
+	Down 			= auto()
+	Front 		= auto()
+	Back			= auto()
+	Right 		= auto()
+	Left   		= auto()
+
+	Head		 	= auto()#BodyPart의 로컬 방향 벡터
+	Bodice 	 	= auto()
+	LeftArm 	= auto()
+	RightArm 	= auto()
+	LeftLeg 	= auto()
+	RightLeg 	= auto()
 
 BodyPart_data = [
 		[BodyPart.LeftArm,	'BP_LArm',			'mixamorig:LeftArm'],
@@ -50,72 +55,87 @@ BodyPart_data = [
 		[BodyPart.RightLeg,	'BP_RLeg',			'mixamorig:RightLeg'],
 		[BodyPart.Bodice,		'BP_Bodice',		'mixamorig:Spine1'],
 		[BodyPart.Head, 		'BP_head',			'mixamorig:HeadTop_End',],# 구분이 가장 쉬운 것을 뒤쪽에 넣는다.
-		]
+	]
 
+girth_data = [
+	 ['head_girth', 			BodyPart.Head,			BPVector.BoneDir, 	'mixamorig:Head',					'mixamorig:HeadTop_End', .5]
+	,['neck_girth', 			BodyPart.Torso,			BPVector.BoneDir, 	'mixamorig:Neck',					'mixamorig:Head', .7]
+	,['L_armhole_girth', 	BodyPart.Torso,			BPVector.Right, 		'mixamorig:LeftArm', 			'mixamorig:RightArm',	1.]
+	,['R_armhole_girth', 	BodyPart.Torso,			BPVector.Right, 		'mixamorig:RightArm', 		'mixamorig:LeftArm',	1.]
 
-landmarks_data = [
-	 ['neck_girth', 			BodyPart.Head,	BPVector.Head, 			'mixamorig:Neck',				'mixamorig:Head', .4]
-	,['L_armfit_girth', 	BodyPart.Head,	BPVector.Right, 		'mixamorig:LeftArm', 		'mixamorig:RightArm',	1.0]
-	,['R_armfit_girth', 	BodyPart.Head,	BPVector.Right, 		'mixamorig:RightArm', 	'mixamorig:LeftArm',	1.0]
+	,['waist_girth', 			BodyPart.Bodice,		BPVector.Bodice, 		'mixamorig:Spine',				'mixamorig:Spine1', .5]
+	,['bust_girth',				BodyPart.Bodice,		BPVector.BoneDir,	  'mixamorig:Spine2', 			'mixamorig:Spine1', .5]
+	,['low_bust_girth',		BodyPart.Bodice,		BPVector.Bodice, 		'mixamorig:Spine1', 			'mixamorig:Spine1', 1.]
+	,['hip_girth',  			BodyPart.Bodice,		BPVector.Bodice, 		'root',										'mixamorig:Spine',	1.0]
 
-	,['waist_girth', 			BodyPart.Bodice,	BPVector.Up, 			'mixamorig:Spine',			'root', 1.]
-	,['breast_girth',			BodyPart.Bodice,	BPVector.Bodice, 	'mixamorig:Spine2', 		'root', 1.0]
-	,['low_breast_girth',	BodyPart.Bodice,	BPVector.Bodice, 	'mixamorig:Spine2', 		'mixamorig:Spine1', 0.5]
-	,['pelvis_girth',  		BodyPart.Bodice,	BPVector.Bodice, 	'mixamorig:RightUpLeg', 'mixamorig:RightLeg',	0.8]
+	,['L_thigh_girth', 		BodyPart.WholeBody,		BPVector.BoneDir,	  'mixamorig:LeftUpLeg', 		'mixamorig:LeftLeg', 0.5]
+	,['L_knee_girth', 		BodyPart.LeftLeg,		BPVector.LeftLeg,	  'mixamorig:LeftLeg', 			'root', 1.0]
+	,['L_calf_girth', 		BodyPart.LeftLeg,		BPVector.BoneDir,	  'mixamorig:LeftLeg', 			'mixamorig:LeftFoot', 0.5]
+	,['L_ankle_girth',		BodyPart.LeftLeg, 	BPVector.LeftLeg,	  'mixamorig:LeftFoot',			'root', 1.0]
 
-	,['L_thigh_girth', 	BodyPart.LeftLeg,		BPVector.LeftLeg, 'mixamorig:LeftUpLeg', 	'mixamorig:LeftLeg', 0.4]#잘림
-	,['L_knee_girth', 	BodyPart.LeftLeg,		BPVector.LeftLeg, 'mixamorig:LeftLeg', 		'root', 1.0]
-	,['L_calf_girth', 	BodyPart.LeftLeg,		BPVector.LeftLeg, 'mixamorig:LeftLeg', 		'mixamorig:LeftFoot', 0.5]
-	,['L_ankle_girth',	BodyPart.LeftLeg, 	BPVector.LeftLeg, 'mixamorig:LeftFoot',		'root', 1.0]
+	,['R_thigh_girth', 		BodyPart.WholeBody,	BPVector.BoneDir, 	'mixamorig:RightUpLeg', 	'mixamorig:RightLeg', 0.5]
+	,['R_knee_girth', 		BodyPart.RightLeg,	BPVector.RightLeg,	'mixamorig:RightLeg', 		'root', 1.0]
+	,['R_calf_girth', 		BodyPart.RightLeg,	BPVector.BoneDir, 	'mixamorig:RightLeg', 		'mixamorig:RightFoot', .5]
+	,['R_ankle_girth', 		BodyPart.RightLeg,	BPVector.RightLeg,	'mixamorig:RightFoot',		'root', 1.0]
 
-	,['R_thigh_girth', 	BodyPart.RightLeg,	BPVector.RightLeg, 'mixamorig:RightUpLeg', 'mixamorig:RightLeg', 0.4]#잘림
-	,['R_knee_girth', 	BodyPart.RightLeg,	BPVector.RightLeg, 'mixamorig:RightLeg', 	'root', 1.0]
-	,['R_calf_girth', 	BodyPart.RightLeg,	BPVector.RightLeg, 'mixamorig:RightLeg', 	'mixamorig:RightFoot', .5]
-	,['R_ankle_girth', 	BodyPart.RightLeg,	BPVector.RightLeg, 'mixamorig:RightFoot',	'root', 1.0]
+	,['L_upArm_girth',		BodyPart.LeftArm,		BPVector.BoneDir, 	'mixamorig:LeftArm',			'mixamorig:LeftForeArm', .5]
+	,['L_elbow_girth', 		BodyPart.LeftArm,		BPVector.LeftArm, 	'mixamorig:LeftForeArm',	'mixamorig:LeftHand', 1.0]
+	,['L_fArm_girth',			BodyPart.LeftArm,		BPVector.BoneDir, 	'mixamorig:LeftForeArm',	'mixamorig:LeftHand', .5]
+	,['L_wrist_girth', 		BodyPart.LeftArm,		BPVector.BoneDir, 	'mixamorig:LeftHand', 		'mixamorig:LeftForeArm', 1.1]
 
-	,['L_upArm_girth',	BodyPart.LeftArm,		BPVector.LeftArm, 'mixamorig:LeftArm',		'mixamorig:LeftForeArm', .5]
-	,['L_elbow_girth', 	BodyPart.LeftArm,		BPVector.LeftArm, 'mixamorig:LeftForeArm','root', 1.0]
-	,['L_fArm_girth',		BodyPart.LeftArm,		BPVector.LeftArm, 'mixamorig:LeftForeArm','mixamorig:LeftHand', .5]
-	,['L_wrist_girth', 	BodyPart.LeftArm,		BPVector.LeftArm, 'mixamorig:LeftHand', 	'mixamorig:LeftForeArm', 1.1]
-
-	,['R_upArm_girth',	BodyPart.RightArm,	BPVector.RightArm, 'mixamorig:RightArm',		'mixamorig:RightForeArm', .5]
-	,['R_elbow_girth',	BodyPart.RightArm,	BPVector.RightArm, 'mixamorig:RightForeArm','root', 1.0]
-	,['R_fArm_girth',		BodyPart.RightArm,	BPVector.RightArm, 'mixamorig:RightForeArm','mixamorig:RightHand', .5]
-	,['R_wrist_girth',	BodyPart.RightArm,	BPVector.RightArm, 'mixamorig:RightHand', 	'mixamorig:RightForeArm', 1.1]
-
+	,['R_upArm_girth',		BodyPart.RightArm,	BPVector.BoneDir, 	'mixamorig:RightArm',			'mixamorig:RightForeArm', .5]
+	,['R_elbow_girth',		BodyPart.RightArm,	BPVector.RightArm,	'mixamorig:RightForeArm',	'mixamorig:RightHand', 1.0]
+	,['R_fArm_girth',			BodyPart.RightArm,	BPVector.BoneDir, 	'mixamorig:RightForeArm',	'mixamorig:RightHand', .5]
+	,['R_wrist_girth',		BodyPart.RightArm,	BPVector.BoneDir, 	'mixamorig:RightHand', 		'mixamorig:RightForeArm', 1.1]
 ]
 
 feature_points_data = [
-	["L_shoulder", 	'L_armfit_girth',	BPVector.Up],
-	["R_shoulder", 	'R_armfit_girth',	BPVector.Up],
-	["L_wrist", 		'L_wrist_girth',	BPVector.Back],
-	["R_wrist", 		'R_wrist_girth', 	BPVector.Back],
-	["L_elbow", 		'L_elbow_girth', 	BPVector.Back],
-	["R_elbow", 		'R_elbow_girth', 	BPVector.Back],
+	["L_shoulder", 	'L_armhole_girth',	BPVector.Up],
+	["R_shoulder", 	'R_armhole_girth',	BPVector.Up],
+	["L_axilla", 		'L_armhole_girth',	BPVector.Down],
+	["R_axilla", 		'R_armhole_girth',	BPVector.Down],
+	["L_wrist", 		'L_wrist_girth',		BPVector.Back],
+	["R_wrist", 		'R_wrist_girth', 		BPVector.Back],
+	["L_elbow", 		'L_elbow_girth', 		BPVector.Back],
+	["R_elbow", 		'R_elbow_girth', 		BPVector.Back],
+	["L_c_fossa", 	'L_elbow_girth', 		BPVector.Front],
+	["R_c_fossa", 	'R_elbow_girth', 		BPVector.Front],
 
-	['L_waist',			'waist_girth', 		BPVector.Left],
-	['R_waist',			'waist_girth', 		BPVector.Right],
-	['F_waist',			'waist_girth', 		BPVector.Front],
-	['rear_waist', 	'waist_girth', 		BPVector.Back],#삐뚤함. cutline_bodice 참고.
+	['L_waist',			'waist_girth', 			BPVector.Left],
+	['R_waist',			'waist_girth', 			BPVector.Right],
+	['F_waist',			'waist_girth', 			BPVector.Front],
+	['rear_waist', 	'waist_girth', 			BPVector.Back],
 
-	['front_neck', 	'neck_girth', 		BPVector.Front],
-	['rear_back', 	'neck_girth', 		BPVector.Back],
-	['L_side_neck', 'neck_girth', 		BPVector.Left],
-	['R_side_neck', 'neck_girth', 		BPVector.Right],
+	['rear_waist', 	'waist_girth', 			BPVector.Back],
 
-	['L_inner_ankle', 'L_ankle_girth', BPVector.Right],
-	['R_inner_ankle', 'R_ankle_girth', BPVector.Left],
-	['L_outer_ankle', 'L_ankle_girth', BPVector.Left],
-	['R_outer_ankle', 'R_ankle_girth', BPVector.Right],
+	['rear_hip',		'hip_girth', 				BPVector.Back],
+
+	['L_neck', 			'neck_girth', 			BPVector.Left],
+	['R_neck', 			'neck_girth', 			BPVector.Right],
+	['F_neck', 			'neck_girth', 			BPVector.Front],
+	['rear_neck', 	'neck_girth', 			BPVector.Back],
+
+	['L_knee', 			'L_knee_girth',			BPVector.Front],
+	['R_knee', 			'R_knee_girth', 		BPVector.Front],
+	['L_p_fossa', 	'L_knee_girth', 		BPVector.Back],
+	['R_p_fossa', 	'R_knee_girth', 		BPVector.Back],
+
+	['L_inner_ankle', 'L_ankle_girth', 	BPVector.Right],
+	['R_inner_ankle', 'R_ankle_girth', 	BPVector.Left],
+	['L_outer_ankle', 'L_ankle_girth', 	BPVector.Left],
+	['R_outer_ankle', 'R_ankle_girth', 	BPVector.Right],
 ]
 
 length_data= [
-	['L_inseam_line', 	'crotch', 	'L_inner_ankle'],
-	['R_inseam_line', 	'crotch', 	'R_inner_ankle'],
-	['L_outseam_line', 	'L_waist',	'L_outer_ankle'],
-	['R_outseam_line', 	'R_waist',	'R_outer_ankle'],
-	['L_shoulder_line', 'L_shoulder', 'L_wrist'],
-	['R_shoulder_line', 'R_shoulder', 'R_wrist'],
+	['L_inseam_length', 	['crotch', 			'L_inner_ankle']],
+	['R_inseam_length', 	['crotch', 			'R_inner_ankle']],
+	['L_outseam_length', 	['L_waist',			'L_outer_ankle']],
+	['R_outseam_length', 	['R_waist',			'R_outer_ankle']],
+	['L_arm_length', 			['L_shoulder',	'L_elbow', 		'L_wrist']],
+	['R_arm_length', 			['R_shoulder',	'R_elbow',		'R_wrist']],
+	['shoulder_length', 	['L_shoulder',	'rear_neck',	'R_shoulder']],
+	['waist_back_length', ['rear_neck', 	'rear_waist',	'rear_hip']],
+	['crotch_total_length', 	['F_waist',	'crotch',			'rear_waist']],
 ]
 
 
@@ -204,6 +224,13 @@ def get_vtx_to_dir(vertices, vec):
 def get_p2p_dist( pos1, pos2):
 	return  np.linalg.norm( np.subtract( pos1, pos2 ))
 
+
+def get_pts_length( pts):
+  len = 0
+  for p0, p1 in zip( pts[:-1], pts[1:]):
+    len += get_p2p_dist( p0, p1)
+  return len
+
 def get_p2vtx_dist( pos, vtx0):
 	dist = np.linalg.norm( np.subtract( np.array(vtx0), pos ), axis=1)
 	return dist
@@ -215,3 +242,8 @@ def get_non_boundary_vertices(tmesh):
 	non_boundary_vertices = np.setdiff1d(all_vertices, boundary_vertices)
 	return tmesh.vertices[non_boundary_vertices]
 
+
+def my_FStr(float_value, precision=2):
+	return "{0:.{precision}f}".format(float_value, precision=precision)
+
+FStr     = np.vectorize( my_FStr) #소수점 출력시 자릿수 조절

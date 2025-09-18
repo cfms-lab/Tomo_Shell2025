@@ -10,13 +10,14 @@ from cfms_meshcut.cut_math import append_bbox
 from cfms_meshcut.cut_group import CutGroup
 from cfms_bodym import BodyMeasure
 
+
 class Work:
 	def __init__(self, avatar, cut_option, slicing_option):
 		# (1). mesh clustering
 		self.avatar 		= avatar #pointer to raw data
 		self.cut_option = copy(cut_option)
 		self.cutter 		= CutManager(avatar)
-		self.cut_group	= self.cutter.cut_mesh( cut_option, bBodyMeaure=True)
+		self.cut_group	= self.cutter.cut_mesh( cut_option)
 		self.bodym			= BodyMeasure( avatar, self.cut_group)#BodyPart 구분을 위한 임시 객체
 
 	def layout2D(self, parent_bounds, dirV, dirH):# lay out on the xy plane
@@ -47,8 +48,8 @@ class Work:
 				return c_o
 		return None
 
-class Batch:
-	def __init__(self, avatar, cut_options, slicing_option):
+class WorkManager:
+	def __init__(self, avatar, cut_options, slicing_option = None):
 
 		self.avatar = avatar
 		self.works = []
@@ -79,13 +80,15 @@ class Batch:
 
 	def getBodyParts(self, part_list : list):
 		cutobjects = []
-		for (cut_name, bp_name) in part_list:
+		for (cut_name, bp_id0, bp_id1) in part_list:
 			for work in self.works:
 				if work.cut_option[0] == cut_name:
-					c_o = work.getBP( bp_name)
+					c_o = work.getBP( bp_id0)
 					if c_o:
 						c_o_2 = copy(c_o)
 						c_o_2.name += f'(from_{cut_name})'
+						if bp_id1:
+							c_o_2.BodyPartID = bp_id1
 						cutobjects.append( c_o_2)
 						break
 		new_name = "BodyM"

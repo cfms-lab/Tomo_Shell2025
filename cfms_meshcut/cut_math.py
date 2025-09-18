@@ -24,8 +24,8 @@ def point_to_bone_dist( point6f, bone6f):
 	#https://math.stackexchange.com/questions/322831/determing-the-distance-from-a-line-segment-to-a-point-in-3-space
 	q  = np.array(point6f[0:3]) #reference vertex (or triangle center)
 	qn = np.array(point6f[3:6]) #vertex normal (or triangle normal)
-	p1 = np.array(bone6f[0:3]) #a line end
-	p2 = np.array(bone6f[3:6])  #the other end
+	p1 = np.array(bone6f[0:3]) #bone_tip
+	p2 = np.array(bone6f[3:6]) #the other tip
 	u  = np.subtract( p2, p1).flatten()
 	v  = np.subtract(  q, p1).flatten()
 	u_norm = np.linalg.norm( u)
