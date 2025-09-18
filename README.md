@@ -19,8 +19,11 @@ scipy==1.16.2
 trimesh==4.7.4
 typed==0.6
 ```
+※ polyscope의 경우 최신 버전(2.5.0)을 설치하지 않으면 'segments'어쩌고 에러가 나오는데,
+파일 중에 "register_curve_network(.."인 함수를 찾아서 edges='lines'로 바꾸면 실행은 가능합니다.
 
-# 얇은 쉘 구조 마네킨 메쉬의 3D프린팅 필라멘트 소모량 예측
+
+## 얇은 쉘 구조 마네킨 메쉬의 3D프린팅 필라멘트 소모량 예측
 Filament Usage Prediction in 3D Printing  of Thin-Shell-Structured Manikin Mesh
 한국섬유공학회지 2025-08 submitted
 
@@ -31,7 +34,7 @@ Filament Usage Prediction in 3D Printing  of Thin-Shell-Structured Manikin Mesh
 ##### GPU 버전은 현재 NVIDIA 4060, 4090에서만 테스트하였습니다. 5000번 시리즈는 아직 오류가 있어 실행이 안될 수 있습니다.
 
 -------------
-# 뼈대 구조와 군집 분석을 이용한 인체 마네킨의 최적 3D프린팅
+## 뼈대 구조와 군집 분석을 이용한 인체 마네킨의 최적 3D프린팅
 Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 한국섬유공학회지 2025-08 submitted
 
@@ -39,7 +42,7 @@ Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis
 
 #### "TSE_TomoSh2.py" 파일을 실행합니다.
 -------------
-# 뼈대 구조와 군집 분석을 이용한 사용자 정의 인체 자동 계측
+## 뼈대 구조와 군집 분석을 이용한 사용자 정의 인체 자동 계측
 User-Defined Three-Dimensional Human Body Measurement Using Bone Structure and Cluster Analysis
 
 한국섬유공학회지 2025-09 submitted
