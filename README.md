@@ -1,35 +1,27 @@
-#### (공통) Python (버전 3.10, 3.11 또는 3.12) 에서 다음 패키지들을 설치합니다
-```
-pip install -r requirements(python3.10).txt
-```
+# Tomo_Shell2025 — Archived (구버전)
 
-## TSE_TomoSh1.py
-### 얇은 쉘 구조 마네킨 메쉬의 3D프린팅 필라멘트 소모량 예측
-Filament Usage Prediction in 3D Printing  of Thin-Shell-Structured Manikin Mesh <br />
-[한국섬유공학회지 2025-10](http://dx.doi.org/10.12772/TSE.2025.62.319) <br />
-p.s. 
-- open3d 패키지가 python 3.14에서 간혹 설치가 안 됩니다. opend3D는 python 3.12까지 지원합니다.
-- GPU 버전은 현재 NVIDIA 4060, 4090에서만 테스트하였습니다. 5000번 시리즈는 아직 오류가 있어 실행이 안될 수 있습니다.
-![sh1](pics/tomo_sh1.png)
+> ⚠️ **이 리포지토리는 구버전입니다. 최신 버전인 [Tomo_Shell2026](https://github.com/cfms-lab/Tomo_Shell2026) 를 참조하세요.**
+>
+> ⚠️ **This is an archived old version. Please use the latest release: [Tomo_Shell2026](https://github.com/cfms-lab/Tomo_Shell2026).**
 
--------------
+---
 
+**KR** — 이 리포지토리는 발표된 논문에 인용된 URL을 보존하기 위해 유지됩니다.
+논문에서 사용된 원본 코드와 데이터는 삭제되지 않았으며, 이 리포지토리의
+[커밋 히스토리](https://github.com/cfms-lab/Tomo_Shell2025/commits/main)에서 그대로 열람·다운로드할 수 있습니다
+(이 안내 커밋 바로 이전 커밋을 확인하세요).
 
-## TSE_TomoSh2.py
-### 뼈대 구조와 군집 분석을 이용한 인체 마네킨의 최적 3D프린팅
-Optimal 3D Printing of Human Manikin Using Bone Structure and Cluster Analysis <br />
-[한국섬유공학회지 2025-12](http://dx.doi.org/10.12772/TSE.2025.62.337)
+**EN** — This repository is preserved so that the URL cited in published papers remains valid.
+The original code and data are not lost: they remain fully accessible in the
+[commit history](https://github.com/cfms-lab/Tomo_Shell2025/commits/main) of this repository
+(see the commit just before this notice).
 
-![sh2](pics/tomo_sh2.png)
+---
 
+최신 버전 **[Tomo_Shell2026](https://github.com/cfms-lab/Tomo_Shell2026)** 은
+solid mesh와 thin-shell mesh 모두에 대해 3D 프린팅 지지구조(support structure) 양을
+CPU 및 CUDA(GPU) 버전으로 계산합니다.
 
--------------
-
-
-## TSE_TomoSh3.py
-### 뼈대 구조와 군집 분석을 이용한 인체 마네킨의 최적 3D 모델링
-User-Defined Three-Dimensional Human Body Measurement Using Bone Structure and Cluster Analysis <br />
-[한국섬유공학회지 2025-12](http://dx.doi.org/10.12772/TSE.2025.62.337)
-
-![sh3](pics/tomo_sh3.png)
-
+The latest **[Tomo_Shell2026](https://github.com/cfms-lab/Tomo_Shell2026)** computes
+3D-printing support-structure volume for both solid and thin-shell meshes,
+with CPU and CUDA (GPU) implementations.
